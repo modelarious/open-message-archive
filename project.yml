@@ -1,0 +1,21 @@
+name: OpenMessageArchive
+options:
+  bundleIdPrefix: ca.modelarious
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+targets:
+  OpenMessageArchive:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: ios/OpenMessageArchive
+      - path: Sources/OpenMessageArchiveCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ca.modelarious.OpenMessageArchive
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Message Archive
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        CODE_SIGN_STYLE: Automatic
