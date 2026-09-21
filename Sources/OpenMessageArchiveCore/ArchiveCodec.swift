@@ -19,8 +19,8 @@ public enum ArchiveCodec {
 
 enum ArchiveEscaping {
     static func csv(_ value: String) -> String {
-        if value.contains(",") || value.contains(""") || value.contains("\n") || value.contains("\r") {
-            return """ + value.replacingOccurrences(of: """, with: """") + """
+        if value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r") {
+            return "\"" + value.replacingOccurrences(of: "\"", with: "\"\"") + "\""
         }
         return value
     }
@@ -30,7 +30,7 @@ enum ArchiveEscaping {
             .replacingOccurrences(of: "&", with: "&amp;")
             .replacingOccurrences(of: "<", with: "&lt;")
             .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: """, with: "&quot;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
             .replacingOccurrences(of: "'", with: "&#39;")
     }
 }
