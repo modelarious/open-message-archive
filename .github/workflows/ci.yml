@@ -13,3 +13,24 @@ jobs:
         run: swift --version
       - name: Test portable core
         run: swift test
+
+  ios-shell:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Xcode version
+        run: xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Compile iOS shell
+        run: >
+          xcodebuild
+          -project OpenMessageArchive.xcodeproj
+          -scheme OpenMessageArchive
+          -configuration Debug
+          -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+          build
