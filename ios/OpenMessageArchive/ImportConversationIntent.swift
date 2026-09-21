@@ -5,9 +5,9 @@ import OpenMessageArchiveCore
 
 @available(iOS 26.0, *)
 struct ImportConversationIntent: AppIntent {
-    static var title: LocalizedStringResource = "Import Conversation Archive"
-    static var description = IntentDescription("Import a local conversation archive created by the companion Shortcut.")
-    static var openAppWhenRun: Bool { true }
+    static let title: LocalizedStringResource = "Import Conversation Archive"
+    static let description = IntentDescription("Import a local conversation archive created by the companion Shortcut.")
+    static let openAppWhenRun = true
 
     @Parameter(
         title: "Conversation Archive",
