@@ -5,13 +5,25 @@ settings:
   base:
     SWIFT_VERSION: 6.0
 targets:
+  OpenMessageArchiveCore:
+    type: framework
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Sources/OpenMessageArchiveCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ca.modelarious.OpenMessageArchiveCore
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
   OpenMessageArchive:
     type: application
     platform: iOS
     deploymentTarget: "26.0"
     sources:
       - path: ios/OpenMessageArchive
-      - path: Sources/OpenMessageArchiveCore
+    dependencies:
+      - target: OpenMessageArchiveCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: ca.modelarious.OpenMessageArchive
@@ -19,3 +31,8 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Message Archive
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         CODE_SIGN_STYLE: Automatic
+schemes:
+  OpenMessageArchive:
+    build:
+      targets:
+        OpenMessageArchive: all
