@@ -39,13 +39,17 @@ final class ExporterTests: XCTestCase {
 
     func testCSVQuotesSpecialCharacters() {
         let csv = ArchiveExporter.renderCSV(fixture())
+        XCTAssertTrue(csv.hasPrefix("date,sender,direction,body,attachments\n"))
         XCTAssertTrue(csv.contains("\"I will, \"\"always\"\"."))
+        XCTAssertTrue(csv.contains("Second line."))
         XCTAssertTrue(csv.contains("photo.jpg"))
     }
 
-    func testHTMLEscapesMessageText() {
+    func testHTMLEscapesMessageTextAndTitle() {
         let html = ArchiveExporter.renderHTML(fixture())
+        XCTAssertTrue(html.contains("Alex &amp; Me"))
         XCTAssertTrue(html.contains("&lt;remember this&gt; &amp; keep it."))
+        XCTAssertTrue(html.contains("&quot;always&quot;"))
         XCTAssertFalse(html.contains("<remember this>"))
     }
 
