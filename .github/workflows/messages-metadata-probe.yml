@@ -1,0 +1,16 @@
+name: iOS Messages metadata probe
+
+on:
+  pull_request:
+    paths:
+      - scripts/probe_messages_appintents.sh
+      - .github/workflows/messages-metadata-probe.yml
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe Messages AppIntents metadata
+        run: bash scripts/probe_messages_appintents.sh
