@@ -16,7 +16,7 @@ struct ImportConversationIntent: AppIntent {
     var archiveFile: IntentFile
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Import \\(\\.$archiveFile)")
+        Summary("Import \(\.$archiveFile)")
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
