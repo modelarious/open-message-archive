@@ -14,19 +14,29 @@ SEARCH_ROOTS=(
   "$(xcode-select -p)/Platforms/iPhoneSimulator.platform/Library/Developer/CoreSimulator/Profiles/Runtimes"
 )
 
-FOUND=()
-for root in "${SEARCH_ROOTS[@]}"; do
-  [[ -d "$root" ]] || continue
-  while IFS= read -r file; do
-    FOUND+=("$file")
-  done < <(find "$root" -type f -path '*/Messages.app/*/Metadata.appintents/extract.actionsdata' -print 2>/dev/null || true)
-done
+# Optional roots make the read-only probe reproducible against retained metadata.
+if [[ "$#" -gt 0 ]]; then
+  SEARCH_ROOTS=("$@")
+fi
 
-# De-duplicate paths.
-mapfile -t FILES < <(printf '%s\n' "${FOUND[@]}" | awk 'NF && !seen[$0]++' | sort)
+# macOS ships Bash 3.2: mapfile/readarray are not available there.
+FILES=()
+found_count=0
+while IFS= read -r file; do
+  FILES[$found_count]="$file"
+  found_count=$((found_count + 1))
+done < <(
+  for root in "${SEARCH_ROOTS[@]}"; do
+    [[ -d "$root" ]] || continue
+    find "$root" -type f \( \
+      -path '*/Messages.app/Metadata.appintents/extract.actionsdata' -o \
+      -path '*/Messages.app/*/Metadata.appintents/extract.actionsdata' \
+    \) -print 2>/dev/null || true
+  done | awk 'NF && !seen[$0]++' | sort
+)
 
-echo "Metadata files: ${#FILES[@]}"
-if [[ ${#FILES[@]} -eq 0 ]]; then
+echo "Metadata files: $found_count"
+if [[ "$found_count" -eq 0 ]]; then
   echo "No Messages AppIntents metadata found in installed simulator runtimes." >&2
   echo "Runtime roots inspected:" >&2
   printf '  %s\n' "${SEARCH_ROOTS[@]}" >&2
