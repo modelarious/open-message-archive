@@ -3,6 +3,7 @@ import UniformTypeIdentifiers
 import OpenMessageArchiveCore
 
 struct ContentView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var archives: [StoredArchive] = []
     @State private var unreadableFiles: [URL] = []
     @State private var importError: String?
@@ -11,7 +12,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if archives.isEmpty {
+                if archives.isEmpty && unreadableFiles.isEmpty {
                     ContentUnavailableView(
                         "No Conversations Yet",
                         systemImage: "bubble.left.and.bubble.right",
@@ -68,6 +69,11 @@ struct ContentView: View {
             }
         }
         .onAppear(perform: reload)
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                reload()
+            }
+        }
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
             importFile(result)
         }
