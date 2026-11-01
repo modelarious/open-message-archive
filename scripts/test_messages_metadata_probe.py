@@ -21,8 +21,8 @@ class MetadataProbeTests(unittest.TestCase):
             tool.chmod(0o755)
         self.env = {**os.environ, "PATH": str(self.bin) + os.pathsep + os.environ["PATH"]}
 
-    def metadata(self, nested=False):
-        path = self.root / "Runtime With Spaces" / "Messages.app"
+    def metadata(self, nested=False, app_name="Messages.app"):
+        path = self.root / "Runtime With Spaces" / app_name
         if nested:
             path /= "Contents/Resources"
         path /= "Metadata.appintents/extract.actionsdata"
@@ -50,6 +50,12 @@ class MetadataProbeTests(unittest.TestCase):
     def test_duplicate_roots_do_not_duplicate_metadata(self):
         self.metadata()
         result = self.run_probe(self.root, self.root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Metadata files: 1", result.stdout)
+
+    def test_mobile_sms_bundle_name(self):
+        self.metadata(app_name="MobileSMS.app")
+        result = self.run_probe(self.root)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Metadata files: 1", result.stdout)
 

@@ -30,7 +30,9 @@ done < <(
     [[ -d "$root" ]] || continue
     find "$root" -type f \( \
       -path '*/Messages.app/Metadata.appintents/extract.actionsdata' -o \
-      -path '*/Messages.app/*/Metadata.appintents/extract.actionsdata' \
+      -path '*/Messages.app/*/Metadata.appintents/extract.actionsdata' -o \
+      -path '*/MobileSMS.app/Metadata.appintents/extract.actionsdata' -o \
+      -path '*/MobileSMS.app/*/Metadata.appintents/extract.actionsdata' \
     \) -print 2>/dev/null || true
   done | awk 'NF && !seen[$0]++' | sort
 )
